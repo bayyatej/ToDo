@@ -27,7 +27,7 @@ public interface TaskDao
 
 	//todo update to get tasks created in a particular list
 //	@Query("SELECT * from task_table WHERE parentKey = :taskKey ORDER BY priority ASC")
-@Query("SELECT * from task_table ORDER BY priority ASC")
+	@Query("SELECT * from task_table ORDER BY id ASC")
 	LiveData<List<Task>> getAllTasks();
 
 }
