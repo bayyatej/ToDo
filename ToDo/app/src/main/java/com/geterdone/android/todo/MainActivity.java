@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.geterdone.android.todo.data.Task;
@@ -55,6 +57,30 @@ public class MainActivity extends AppCompatActivity
 				adapter.setTasks(tasks);
 			}
 		});
+	}
+
+	/*
+		Menu Methods
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		getMenuInflater().inflate(R.menu.settings_menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.settings_menu_item:
+				//todo launch settings menu activity
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+
 	}
 
 	@Override
