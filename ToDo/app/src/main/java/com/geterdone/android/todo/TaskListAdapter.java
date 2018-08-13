@@ -30,7 +30,9 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 				@Override
 				public void onClick(View v)
 				{
-					Intent intent = new Intent(mContext, NewTaskActivity.class);
+					Intent intent = new Intent(mContext, EditTaskActivity.class);
+					intent.putExtra("name", taskNameTextView.getText().toString().trim());
+					intent.putExtra("date", taskDateTextView.getText().toString().trim());
 					mContext.startActivity(intent);
 				}
 			});
