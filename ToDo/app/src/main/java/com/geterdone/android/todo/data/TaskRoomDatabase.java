@@ -1,4 +1,4 @@
-package com.geterdone.android.todo;
+package com.geterdone.android.todo.data;
 
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;

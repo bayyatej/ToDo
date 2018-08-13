@@ -1,4 +1,4 @@
-package com.geterdone.android.todo;
+package com.geterdone.android.todo.data;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;

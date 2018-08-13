@@ -1,4 +1,4 @@
-package com.geterdone.android.todo;
+package com.geterdone.android.todo.data;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
@@ -18,7 +18,7 @@ public class TaskViewModel extends AndroidViewModel
 		mAllTasks = mRepository.getAllTasks();
 	}
 
-	LiveData<List<Task>> getAllTasks()
+	public LiveData<List<Task>> getAllTasks()
 	{
 		return mAllTasks;
 	}

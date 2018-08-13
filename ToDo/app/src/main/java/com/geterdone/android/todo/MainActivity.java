@@ -13,6 +13,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.geterdone.android.todo.data.Task;
+import com.geterdone.android.todo.data.TaskViewModel;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
