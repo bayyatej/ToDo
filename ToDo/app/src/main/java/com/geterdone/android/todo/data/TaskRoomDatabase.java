@@ -17,9 +17,9 @@ public abstract class TaskRoomDatabase extends RoomDatabase
 	private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback()
 	{
 		@Override
-		public void onOpen(@NonNull SupportSQLiteDatabase db)
+		public void onCreate(@NonNull SupportSQLiteDatabase db)
 		{
-			super.onOpen(db);
+			super.onCreate(db);
 			new PopulateDbAsync(INSTANCE).execute();
 		}
 	};

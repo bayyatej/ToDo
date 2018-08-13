@@ -7,8 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 public class TaskEditorActivity extends AppCompatActivity
@@ -63,29 +61,23 @@ public class TaskEditorActivity extends AppCompatActivity
 		switch (item.getItemId())
 		{
 			case R.id.editor_menu_save:
-				final Button button = findViewById(R.id.editor_menu_save);
+
 				//todo change button click behavior to update tasks
-				button.setOnClickListener(new View.OnClickListener()
+
+				Intent saveIntent = new Intent();
+				if (TextUtils.isEmpty(mTaskDateEditText.getText()) || TextUtils.isEmpty
+						(mTaskNameEditText.getText()))
 				{
-					@Override
-					public void onClick(View v)
-					{
-						Intent saveIntent = new Intent();
-						if (TextUtils.isEmpty(mTaskDateEditText.getText()) || TextUtils.isEmpty
-								(mTaskNameEditText.getText()))
-						{
-							setResult(RESULT_CANCELED, saveIntent);
-						} else
-						{
-							String name = mTaskNameEditText.getText().toString().trim();
-							String date = mTaskDateEditText.getText().toString().trim();
-							saveIntent.putExtra(EXTRA_NAME, name);
-							saveIntent.putExtra(EXTRA_DATE, date);
-							setResult(RESULT_OK, saveIntent);
-						}
-						finish();
-					}
-				});
+					setResult(RESULT_CANCELED, saveIntent);
+				} else
+				{
+					String name = mTaskNameEditText.getText().toString().trim();
+					String date = mTaskDateEditText.getText().toString().trim();
+					saveIntent.putExtra(EXTRA_NAME, name);
+					saveIntent.putExtra(EXTRA_DATE, date);
+					setResult(RESULT_OK, saveIntent);
+				}
+				finish();
 				return true;
 			case R.id.editor_menu_delete:
 				//todo delete Task
