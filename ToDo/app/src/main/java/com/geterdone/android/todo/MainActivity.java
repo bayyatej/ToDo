@@ -108,6 +108,13 @@ public class MainActivity extends AppCompatActivity
 						mTaskViewModel.update(task);
 					}
 					break;
+				case "delete":
+					if (id != -1)
+					{
+						task.setId(id);
+						mTaskViewModel.delete(task);
+					}
+					break;
 				default:
 					Snackbar.make(findViewById(R.id.main_activity_coordinator), "Task Not Saved",
 								  Snackbar.LENGTH_LONG).show();

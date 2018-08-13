@@ -83,7 +83,12 @@ public class TaskEditorActivity extends AppCompatActivity
 				finish();
 				return true;
 			case R.id.editor_menu_delete:
-				//todo delete Task
+				Intent deleteIntent = new Intent();
+				mAction = "delete";
+				deleteIntent.putExtra("action", mAction);
+				deleteIntent.putExtra("taskId", mId);
+				setResult(RESULT_OK, deleteIntent);
+				finish();
 				return true;
 			case android.R.id.home:
 				this.finish();
