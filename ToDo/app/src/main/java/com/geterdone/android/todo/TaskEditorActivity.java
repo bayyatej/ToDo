@@ -13,8 +13,9 @@ public class TaskEditorActivity extends AppCompatActivity
 {
 	public static final String EXTRA_NAME = "com.geterdone.android.tasklistsql.NAME";
 	public static final String EXTRA_DATE = "com.geterdone.android.tasklistsql.DATE";
-	private EditText mTaskNameEditText,
-			mTaskDateEditText;
+	private EditText mTaskNameEditText;
+	private EditText mTaskDateEditText;
+	private String action;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -25,11 +26,12 @@ public class TaskEditorActivity extends AppCompatActivity
 		Intent intent = getIntent();
 		mTaskNameEditText = findViewById(R.id.task_name_edit_text);
 		mTaskDateEditText = findViewById(R.id.task_date_edit_text);
+		action = intent.getStringExtra("action");
 
 		if (actionBar != null)
 		{
 			actionBar.setDisplayHomeAsUpEnabled(true);
-			switch (intent.getStringExtra("action"))
+			switch (action)
 			{
 				case "add":
 					actionBar.setTitle("Add New Task");
@@ -61,9 +63,6 @@ public class TaskEditorActivity extends AppCompatActivity
 		switch (item.getItemId())
 		{
 			case R.id.editor_menu_save:
-
-				//todo change button click behavior to update tasks
-
 				Intent saveIntent = new Intent();
 				if (TextUtils.isEmpty(mTaskDateEditText.getText()) || TextUtils.isEmpty
 						(mTaskNameEditText.getText()))
@@ -75,6 +74,7 @@ public class TaskEditorActivity extends AppCompatActivity
 					String date = mTaskDateEditText.getText().toString().trim();
 					saveIntent.putExtra(EXTRA_NAME, name);
 					saveIntent.putExtra(EXTRA_DATE, date);
+					saveIntent.putExtra("action", action);
 					setResult(RESULT_OK, saveIntent);
 				}
 				finish();

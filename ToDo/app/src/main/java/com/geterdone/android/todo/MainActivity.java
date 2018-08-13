@@ -22,7 +22,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
 {
-	public static final int NEW_TASK_ACTIVITY_REQUEST_CODE = 1;
+	public static final int TASK_EDITOR_ACTIVITY_REQUEST_CODE = 1;
 	private TaskViewModel mTaskViewModel;
 
 	@Override
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity
 			{
 				Intent intent = new Intent(MainActivity.this, TaskEditorActivity.class);
 				intent.putExtra("action", "add");
-				startActivityForResult(intent, NEW_TASK_ACTIVITY_REQUEST_CODE);
+				startActivityForResult(intent, TASK_EDITOR_ACTIVITY_REQUEST_CODE);
 			}
 		});
 		RecyclerView recyclerView = findViewById(R.id.recyclerview);
@@ -89,11 +89,23 @@ public class MainActivity extends AppCompatActivity
 	{
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == NEW_TASK_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK)
+		if (requestCode == TASK_EDITOR_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK)
 		{
 			Task task = new Task(data.getStringExtra(TaskEditorActivity.EXTRA_NAME), data
 					.getStringExtra(TaskEditorActivity.EXTRA_DATE));
-			mTaskViewModel.insert(task);
+			switch (data.getStringExtra("action"))
+			{
+				case "add":
+					mTaskViewModel.insert(task);
+					break;
+				case "edit":
+					mTaskViewModel.update(task);
+					break;
+				default:
+					Snackbar.make(findViewById(R.id.main_activity_coordinator), "Task Not Saved",
+								  Snackbar.LENGTH_LONG).show();
+					break;
+			}
 		} else
 		{
 			Snackbar.make(findViewById(R.id.main_activity_coordinator), "Task Not Saved",

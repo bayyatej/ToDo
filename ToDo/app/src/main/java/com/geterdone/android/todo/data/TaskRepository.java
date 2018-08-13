@@ -28,6 +28,12 @@ public class TaskRepository
 		new insertAsyncTask(mTaskDao).execute(task);
 	}
 
+	public void update(Task task)
+	{
+		new updateAsyncTask(mTaskDao).execute(task);
+	}
+
+	//helper classes
 	private static class insertAsyncTask extends AsyncTask<Task, Void, Void>
 	{
 
@@ -42,6 +48,24 @@ public class TaskRepository
 		protected Void doInBackground(final Task... params)
 		{
 			mAsyncTaskDao.insert(params[0]);
+			return null;
+		}
+	}
+
+	private static class updateAsyncTask extends AsyncTask<Task, Void, Void>
+	{
+		private TaskDao mAsyncTaskDao;
+
+		updateAsyncTask(TaskDao dao)
+		{
+			mAsyncTaskDao = dao;
+
+		}
+
+		@Override
+		protected Void doInBackground(Task... tasks)
+		{
+			mAsyncTaskDao.update(tasks[0]);
 			return null;
 		}
 	}

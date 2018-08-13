@@ -27,4 +27,9 @@ public class TaskViewModel extends AndroidViewModel
 	{
 		mRepository.insert(task);
 	}
+
+	public void update(Task task)
+	{
+		mRepository.update(task);
+	}
 }

@@ -1,5 +1,6 @@
 package com.geterdone.android.todo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -34,7 +35,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 					intent.putExtra("name", taskNameTextView.getText().toString().trim());
 					intent.putExtra("date", taskDateTextView.getText().toString().trim());
 					intent.putExtra("action", "edit");
-					mContext.startActivity(intent);
+					((Activity) mContext).startActivityForResult(intent, MainActivity.TASK_EDITOR_ACTIVITY_REQUEST_CODE);
 				}
 			});
 		}
@@ -50,6 +51,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 		mContext = context;
 	}
 
+	@NonNull
 	@Override
 	public TaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
 	{
@@ -67,7 +69,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 			holder.taskDateTextView.setText(current.getTaskDate());
 		} else
 		{
-			holder.taskDateTextView.setText("No Task");
+			holder.taskDateTextView.setText(R.string.add_a_task_when_empty);
 		}
 	}
 
