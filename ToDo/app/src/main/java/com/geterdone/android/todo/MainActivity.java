@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.geterdone.android.todo.data.Task;
 import com.geterdone.android.todo.data.TaskViewModel;
 
 import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -93,13 +95,18 @@ public class MainActivity extends AppCompatActivity
 		{
 			Task task = new Task(data.getStringExtra(TaskEditorActivity.EXTRA_NAME), data
 					.getStringExtra(TaskEditorActivity.EXTRA_DATE));
+			int id = data.getIntExtra("taskId", -1);
 			switch (data.getStringExtra("action"))
 			{
 				case "add":
 					mTaskViewModel.insert(task);
 					break;
 				case "edit":
-					mTaskViewModel.update(task);
+					if (id != -1)
+					{
+						task.setId(id);
+						mTaskViewModel.update(task);
+					}
 					break;
 				default:
 					Snackbar.make(findViewById(R.id.main_activity_coordinator), "Task Not Saved",

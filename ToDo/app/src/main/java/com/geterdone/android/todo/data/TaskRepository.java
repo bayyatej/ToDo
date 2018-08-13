@@ -21,7 +21,7 @@ public class TaskRepository
 	LiveData<List<Task>> getAllTasks()
 	{
 		return mAllTasks;
-	}
+	} //todo move to another thread
 
 	public void insert(Task task)
 	{

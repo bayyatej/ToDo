@@ -35,6 +35,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 					intent.putExtra("name", taskNameTextView.getText().toString().trim());
 					intent.putExtra("date", taskDateTextView.getText().toString().trim());
 					intent.putExtra("action", "edit");
+					intent.putExtra("taskId", mPos);
 					((Activity) mContext).startActivityForResult(intent, MainActivity.TASK_EDITOR_ACTIVITY_REQUEST_CODE);
 				}
 			});
@@ -44,6 +45,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 	private final LayoutInflater mInflater;
 	private List<Task> mTasks;
 	private final Context mContext;
+	private int mPos;
 
 	TaskListAdapter(Context context)
 	{
@@ -67,6 +69,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 			Task current = mTasks.get(position);
 			holder.taskNameTextView.setText(current.getTaskName());
 			holder.taskDateTextView.setText(current.getTaskDate());
+			mPos = current.getId();
 		} else
 		{
 			holder.taskDateTextView.setText(R.string.add_a_task_when_empty);
