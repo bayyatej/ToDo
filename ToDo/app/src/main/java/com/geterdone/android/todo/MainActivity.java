@@ -39,7 +39,8 @@ public class MainActivity extends AppCompatActivity
 			@Override
 			public void onClick(View view)
 			{
-				Intent intent = new Intent(MainActivity.this, NewTaskActivity.class);
+				Intent intent = new Intent(MainActivity.this, TaskEditorActivity.class);
+				intent.putExtra("action", "add");
 				startActivityForResult(intent, NEW_TASK_ACTIVITY_REQUEST_CODE);
 			}
 		});
@@ -90,8 +91,8 @@ public class MainActivity extends AppCompatActivity
 
 		if (requestCode == NEW_TASK_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK)
 		{
-			Task task = new Task(data.getStringExtra(NewTaskActivity.EXTRA_NAME), data
-					.getStringExtra(NewTaskActivity.EXTRA_DATE));
+			Task task = new Task(data.getStringExtra(TaskEditorActivity.EXTRA_NAME), data
+					.getStringExtra(TaskEditorActivity.EXTRA_DATE));
 			mTaskViewModel.insert(task);
 		} else
 		{

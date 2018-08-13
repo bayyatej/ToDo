@@ -5,4 +5,6 @@
     <string name="task_editor_hint_task_name">Task Name</string>
     <string name="task_editor_save_task">Save Task</string>
     <string name="task_editor_hint_task_date">Task Due Date</string>
+    <string name="editor_menu_save_task">Save Task</string>
+    <string name="editor_menu_delete_task">Delete Task</string>
 </resources>
