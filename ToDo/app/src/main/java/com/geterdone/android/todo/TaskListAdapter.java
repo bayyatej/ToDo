@@ -20,6 +20,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 	{
 		private final TextView taskNameTextView;
 		private final TextView taskDateTextView;
+		private int mPos;
 
 		private TaskViewHolder(View itemView)
 		{
@@ -40,12 +41,16 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 				}
 			});
 		}
+
+		private void setPos(int pos)
+		{
+			mPos = pos;
+		}
 	}
 
 	private final LayoutInflater mInflater;
 	private List<Task> mTasks;
 	private final Context mContext;
-	private int mPos;
 
 	TaskListAdapter(Context context)
 	{
@@ -69,7 +74,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 			Task current = mTasks.get(position);
 			holder.taskNameTextView.setText(current.getTaskName());
 			holder.taskDateTextView.setText(current.getTaskDate());
-			mPos = current.getId();
+			holder.setPos(current.getId());
 		} else
 		{
 			holder.taskDateTextView.setText(R.string.add_a_task_when_empty);
