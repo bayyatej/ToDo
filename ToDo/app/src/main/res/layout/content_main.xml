@@ -12,6 +12,6 @@
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp"
+        android:background="#535054"
         tools:listitem="@layout/task_list_item" />
 </android.support.constraint.ConstraintLayout>

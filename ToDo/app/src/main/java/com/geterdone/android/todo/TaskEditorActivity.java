@@ -60,15 +60,14 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 		mTaskDateTextView = findViewById(R.id.editor_task_date_text_view);
 		mTaskTimeTextView = findViewById(R.id.editor_task_time_text_view);
 		Spinner mPrioritySpinner = findViewById(R.id.editor_task_priority_spinner);
+		Button taskDateBtn = findViewById(R.id.task_date_button);
+		Button taskTimeBtn = findViewById(R.id.task_time_button);
 		mCal = Calendar.getInstance(TimeZone.getDefault());
 		mAction = intent.getStringExtra("action");
 		mId = intent.getIntExtra("taskId", -1);
 		mDateTime = intent.getLongExtra("date", 0);
 		mPriority = intent.getIntExtra("priority", 0);
 		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.editor_task_priority_array, android.R.layout.simple_spinner_item);
-
-		Button taskDateBtn = findViewById(R.id.task_date_button);
-		Button taskTimeBtn = findViewById(R.id.task_time_button);
 
 		taskDateBtn.setOnClickListener(new View.OnClickListener()
 		{

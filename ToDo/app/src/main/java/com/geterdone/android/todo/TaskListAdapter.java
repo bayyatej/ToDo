@@ -32,6 +32,18 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 			super(itemView);
 			taskNameTextView = itemView.findViewById(R.id.task_name_text_view);
 			taskDateTextView = itemView.findViewById(R.id.task_date_text_view);
+			switch (mPriority)
+			{
+				case 0:
+					itemView.setBackgroundColor(itemView.getContext().getResources().getColor(R.color.lowPriority));
+					break;
+				case 1:
+					itemView.setBackgroundColor(itemView.getContext().getResources().getColor(R.color.mediumPriority));
+					break;
+				case 3:
+					itemView.setBackgroundColor(itemView.getContext().getResources().getColor(R.color.highPriority));
+					break;
+			}
 			itemView.setOnClickListener(new View.OnClickListener()
 			{
 				@Override
@@ -41,6 +53,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 					intent.putExtra("name", taskNameTextView.getText().toString().trim());
 					intent.putExtra("date", mDateInMillis);
 					intent.putExtra("action", "edit");
+					intent.putExtra("priority", mPriority);
 					intent.putExtra("taskId", mPos);
 					((Activity) mContext).startActivityForResult(intent, MainActivity.TASK_EDITOR_ACTIVITY_REQUEST_CODE);
 				}

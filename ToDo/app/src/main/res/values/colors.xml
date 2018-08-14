@@ -3,4 +3,8 @@
     <color name="colorPrimary">#5E8E3F</color>
     <color name="colorPrimaryDark">#18453b</color>
     <color name="colorAccent">#008183</color>
+
+    <color name="highPriority">#d7182a</color>
+    <color name="mediumPriority">#f08521</color>
+    <color name="lowPriority">#6c9ac3</color>
 </resources>
