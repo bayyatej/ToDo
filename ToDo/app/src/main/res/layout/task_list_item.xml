@@ -9,6 +9,7 @@
         android:id="@+id/task_name_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:textSize="24sp"
         tools:text="@tools:sample/cities" />
 
