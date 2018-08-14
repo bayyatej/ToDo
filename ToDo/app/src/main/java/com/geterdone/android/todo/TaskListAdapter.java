@@ -12,7 +12,10 @@ import android.widget.TextView;
 
 import com.geterdone.android.todo.data.Task;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>
 {
@@ -21,6 +24,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 		private final TextView taskNameTextView;
 		private final TextView taskDateTextView;
 		private int mPos;
+		private long mDateInMillis;
 
 		private TaskViewHolder(View itemView)
 		{
@@ -34,7 +38,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 				{
 					Intent intent = new Intent(mContext, TaskEditorActivity.class);
 					intent.putExtra("name", taskNameTextView.getText().toString().trim());
-					intent.putExtra("date", taskDateTextView.getText().toString().trim());
+					intent.putExtra("date", mDateInMillis);
 					intent.putExtra("action", "edit");
 					intent.putExtra("taskId", mPos);
 					((Activity) mContext).startActivityForResult(intent, MainActivity.TASK_EDITOR_ACTIVITY_REQUEST_CODE);
@@ -45,6 +49,11 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 		private void setPos(int pos)
 		{
 			mPos = pos;
+		}
+
+		private void setDateInMillis(long date)
+		{
+			mDateInMillis = date;
 		}
 	}
 
@@ -72,9 +81,16 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 		if (mTasks != null)
 		{
 			Task current = mTasks.get(position);
+			long dateTime = current.getTaskDate();
+			Date date = new Date(dateTime);
+			DateFormat dateTimeFormatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
+			dateTimeFormatter.setTimeZone(TimeZone.getDefault());
+			String formattedDateString = dateTimeFormatter.format(date);
+
 			holder.taskNameTextView.setText(current.getTaskName());
-			holder.taskDateTextView.setText(current.getTaskDate());
+			holder.taskDateTextView.setText(formattedDateString);
 			holder.setPos(current.getId());
+			holder.setDateInMillis(dateTime);
 		} else
 		{
 			holder.taskDateTextView.setText(R.string.add_a_task_when_empty);

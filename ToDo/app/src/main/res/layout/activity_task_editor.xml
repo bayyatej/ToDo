@@ -39,4 +39,25 @@
         android:text="@string/task_editor_select_due_date"
         android:textSize="18sp" />
 
+    <TextView
+        android:id="@+id/editor_task_time_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center_horizontal"
+        android:hint="@string/task_editor_hint_task_date"
+        android:padding="8dp"
+        android:textSize="18sp"
+        android:visibility="gone"
+        tools:targetApi="jelly_bean" />
+
+    <Button
+        android:id="@+id/task_time_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/task_editor_select_time_due"
+        android:textSize="18sp" />
+
 </LinearLayout>

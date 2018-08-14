@@ -21,9 +21,9 @@ public class Task
 	@ColumnInfo(name = "name")
 	private String mTaskName;
 	@ColumnInfo(name = "date")
-	private String mTaskDate;
+	private long mTaskDate;
 
-	public Task(@NonNull String taskName, @NonNull String taskDate)
+	public Task(@NonNull String taskName, @NonNull long taskDate)
 	{
 		this.mTaskName = taskName;
 		this.mTaskDate = taskDate;
@@ -49,7 +49,7 @@ public class Task
 		return this.mTaskName;
 	}
 
-	public String getTaskDate()
+	public long getTaskDate()
 	{
 		return this.mTaskDate;
 	}

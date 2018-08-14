@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 
 public class DatePickerFragment extends DialogFragment
@@ -17,6 +18,7 @@ public class DatePickerFragment extends DialogFragment
 	{
 		// Use the current date as the default date in the picker
 		final Calendar c = Calendar.getInstance();
+		c.setTimeZone(TimeZone.getDefault());
 		int year = c.get(Calendar.YEAR);
 		int month = c.get(Calendar.MONTH);
 		int day = c.get(Calendar.DAY_OF_MONTH);

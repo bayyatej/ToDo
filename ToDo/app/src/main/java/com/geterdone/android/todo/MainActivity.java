@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity
 		if (requestCode == TASK_EDITOR_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK)
 		{
 			Task task = new Task(data.getStringExtra(TaskEditorActivity.EXTRA_NAME), data
-					.getStringExtra(TaskEditorActivity.EXTRA_DATE));
+					.getLongExtra(TaskEditorActivity.EXTRA_DATE, 0));
 			int id = data.getIntExtra("taskId", -1);
 			switch (data.getStringExtra("action"))
 			{
