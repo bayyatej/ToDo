@@ -8,4 +8,5 @@
     <string name="editor_menu_save_task">Save Task</string>
     <string name="editor_menu_delete_task">Delete Task</string>
     <string name="add_a_task_when_empty">Tap the \'Add\' button at the bottom of the screen to add a task</string>
+    <string name="editor_menu_advanced_task_options">Advanced Task Options</string>
 </resources>
