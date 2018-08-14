@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +19,6 @@ import com.geterdone.android.todo.data.Task;
 import com.geterdone.android.todo.data.TaskViewModel;
 
 import java.util.List;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -34,8 +32,12 @@ public class MainActivity extends AppCompatActivity
 		setContentView(R.layout.activity_main);
 		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
-
 		FloatingActionButton fab = findViewById(R.id.fab);
+		RecyclerView recyclerView = findViewById(R.id.recyclerview);
+		final TaskListAdapter adapter = new TaskListAdapter(this);
+
+		recyclerView.setAdapter(adapter);
+		recyclerView.setLayoutManager(new LinearLayoutManager(this));
 		fab.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
@@ -46,10 +48,6 @@ public class MainActivity extends AppCompatActivity
 				startActivityForResult(intent, TASK_EDITOR_ACTIVITY_REQUEST_CODE);
 			}
 		});
-		RecyclerView recyclerView = findViewById(R.id.recyclerview);
-		final TaskListAdapter adapter = new TaskListAdapter(this);
-		recyclerView.setAdapter(adapter);
-		recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 		mTaskViewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
 		mTaskViewModel.getAllTasks().observe(this, new Observer<List<Task>>()
