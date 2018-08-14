@@ -25,6 +25,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 		private final TextView taskDateTextView;
 		private int mPos;
 		private long mDateInMillis;
+		private int mPriority;
 
 		private TaskViewHolder(View itemView)
 		{
@@ -55,6 +56,11 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 		{
 			mDateInMillis = date;
 		}
+
+		private void setPriority(int priority)
+		{
+			mPriority = priority;
+		}
 	}
 
 	private final LayoutInflater mInflater;
@@ -81,6 +87,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 		if (mTasks != null)
 		{
 			Task current = mTasks.get(position);
+			holder.setPriority(current.getPriority());
 			long dateTime = current.getTaskDate();
 			Date date = new Date(dateTime);
 			DateFormat dateTimeFormatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);

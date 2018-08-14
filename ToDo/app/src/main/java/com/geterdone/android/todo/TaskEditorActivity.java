@@ -10,9 +10,12 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -25,14 +28,17 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 {
 	public static final String EXTRA_NAME = "com.geterdone.android.tasklistsql.NAME";
 	public static final String EXTRA_DATE = "com.geterdone.android.tasklistsql.DATE";
+
 	private EditText mTaskNameEditText;
 	private TextView mTaskDateTextView;
 	private TextView mTaskTimeTextView;
+
 	private Calendar mCal;
 	private String mTimeDisplayString;
 	private String mDateDisplayString;
 	private String mAction;
 	private long mDateTime;
+	private int mPriority;
 	private int mId;
 
 	@Override
@@ -53,10 +59,13 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 		mTaskNameEditText = findViewById(R.id.editor_task_name_edit_text);
 		mTaskDateTextView = findViewById(R.id.editor_task_date_text_view);
 		mTaskTimeTextView = findViewById(R.id.editor_task_time_text_view);
+		Spinner mPrioritySpinner = findViewById(R.id.editor_task_priority_spinner);
 		mCal = Calendar.getInstance(TimeZone.getDefault());
 		mAction = intent.getStringExtra("action");
 		mId = intent.getIntExtra("taskId", -1);
 		mDateTime = intent.getLongExtra("date", 0);
+		mPriority = intent.getIntExtra("priority", 0);
+		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.editor_task_priority_array, android.R.layout.simple_spinner_item);
 
 		Button taskDateBtn = findViewById(R.id.task_date_button);
 		Button taskTimeBtn = findViewById(R.id.task_time_button);
@@ -70,7 +79,6 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 				datePickerFragment.show(getSupportFragmentManager(), "datePicker");
 			}
 		});
-
 		taskTimeBtn.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
@@ -78,6 +86,22 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 			{
 				TimePickerFragment timePickerFragment = new TimePickerFragment();
 				timePickerFragment.show(getSupportFragmentManager(), "timePicker");
+			}
+		});
+		spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mPrioritySpinner.setAdapter(spinnerAdapter);
+		mPrioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+		{
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+			{
+				mPriority = position;
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent)
+			{
+				mPriority = 0;
 			}
 		});
 
@@ -97,6 +121,7 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 					timeFormatter.setTimeZone(TimeZone.getDefault());
 					mDateDisplayString = getDateString(dateFormatter);
 					mTimeDisplayString = getTimeString(timeFormatter);
+					mPrioritySpinner.setSelection(mPriority, false);
 
 					actionBar.setTitle("Edit Task");
 					mTaskNameEditText.setText(intent.getStringExtra("name"));
@@ -161,6 +186,7 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 					saveIntent.putExtra(EXTRA_DATE, mDateTime);
 					saveIntent.putExtra("action", mAction);
 					saveIntent.putExtra("taskId", mId);
+					saveIntent.putExtra("priority", mPriority);
 					setResult(RESULT_OK, saveIntent);
 				}
 				finish();

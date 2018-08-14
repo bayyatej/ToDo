@@ -11,10 +11,11 @@ public class Task
 {
 	@PrimaryKey(autoGenerate = true)
 	private int id;
-	//todo add priority and parentKey support
-	/*@NonNull
+	//todo parentKey support
+	@NonNull
 	@ColumnInfo(name = "priority")
-	private Integer priority;
+	private Integer mPriority = 0;
+	/*
 	@ColumnInfo(name = "parentKey")
 	private Integer parentKey;*/
 	@NonNull
@@ -23,10 +24,11 @@ public class Task
 	@ColumnInfo(name = "date")
 	private long mTaskDate;
 
-	public Task(@NonNull String taskName, @NonNull long taskDate)
+	public Task(@NonNull String taskName, @NonNull long taskDate, @NonNull Integer priority)
 	{
 		this.mTaskName = taskName;
 		this.mTaskDate = taskDate;
+		this.mPriority = priority;
 	}
 
 	public int getId()
@@ -34,11 +36,11 @@ public class Task
 		return this.id;
 	}
 
-	/*public int getPriority()
+	public Integer getPriority()
 	{
-		return this.priority;
+		return this.mPriority;
 	}
-
+/*
 	public int getParentKey()
 	{
 		return this.parentKey;
@@ -59,11 +61,12 @@ public class Task
 		this.id = id;
 	}
 
-	/*public void setPriority(@NonNull Integer priority)
+	public void setPriority(@NonNull Integer priority)
 	{
-		this.priority = priority;
+		this.mPriority = priority;
 	}
 
+	/*
 	public void setParentKey(Integer parentKey)
 	{
 		this.parentKey = parentKey;
