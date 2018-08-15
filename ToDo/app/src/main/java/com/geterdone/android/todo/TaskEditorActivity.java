@@ -26,6 +26,9 @@ import java.util.TimeZone;
 
 public class TaskEditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener
 {
+	//todo set default date to be todays date if not selected
+	//todo validate input
+
 	public static final String EXTRA_NAME = "com.geterdone.android.tasklistsql.NAME";
 	public static final String EXTRA_DATE = "com.geterdone.android.tasklistsql.DATE";
 

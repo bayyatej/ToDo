@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.geterdone.android.todo.data.Task;
@@ -21,6 +22,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 {
 	class TaskViewHolder extends RecyclerView.ViewHolder
 	{
+		private final LinearLayout taskContainerLinearLayout;
 		private final TextView taskNameTextView;
 		private final TextView taskDateTextView;
 		private int mPos;
@@ -32,18 +34,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 			super(itemView);
 			taskNameTextView = itemView.findViewById(R.id.task_name_text_view);
 			taskDateTextView = itemView.findViewById(R.id.task_date_text_view);
-			switch (mPriority)
-			{
-				case 0:
-					itemView.setBackgroundColor(itemView.getContext().getResources().getColor(R.color.lowPriority));
-					break;
-				case 1:
-					itemView.setBackgroundColor(itemView.getContext().getResources().getColor(R.color.mediumPriority));
-					break;
-				case 3:
-					itemView.setBackgroundColor(itemView.getContext().getResources().getColor(R.color.highPriority));
-					break;
-			}
+			taskContainerLinearLayout = itemView.findViewById(R.id.task_container);
 			itemView.setOnClickListener(new View.OnClickListener()
 			{
 				@Override
@@ -100,7 +91,8 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 		if (mTasks != null)
 		{
 			Task current = mTasks.get(position);
-			holder.setPriority(current.getPriority());
+			int priority = current.getPriority();
+			holder.setPriority(priority);
 			long dateTime = current.getTaskDate();
 			Date date = new Date(dateTime);
 			DateFormat dateTimeFormatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
@@ -111,6 +103,19 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 			holder.taskDateTextView.setText(formattedDateString);
 			holder.setPos(current.getId());
 			holder.setDateInMillis(dateTime);
+
+			switch (priority)
+			{
+				case 0:
+					holder.taskContainerLinearLayout.setBackgroundColor(holder.taskContainerLinearLayout.getContext().getResources().getColor(R.color.lowPriority));
+					break;
+				case 1:
+					holder.taskContainerLinearLayout.setBackgroundColor(holder.taskContainerLinearLayout.getContext().getResources().getColor(R.color.mediumPriority));
+					break;
+				case 2:
+					holder.taskContainerLinearLayout.setBackgroundColor(holder.taskContainerLinearLayout.getContext().getResources().getColor(R.color.highPriority));
+					break;
+			}
 		} else
 		{
 			holder.taskDateTextView.setText(R.string.add_a_task_when_empty);
