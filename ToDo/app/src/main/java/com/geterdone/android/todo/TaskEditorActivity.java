@@ -30,7 +30,6 @@ import java.util.TimeZone;
 
 public class TaskEditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener
 {
-	//todo set default date to be today's date if not selected
 	//todo validate input
 
 	public static final String EXTRA_NAME = "com.geterdone.android.tasklistsql.NAME";
@@ -173,6 +172,34 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 		return formatter.format(time);
 	}
 
+	private void saveProduct()
+	{
+		Intent saveIntent = new Intent();
+		if (mDateTime <= 0 || TextUtils.isEmpty
+				(mTaskNameEditText.getText()))
+		{
+			setResult(RESULT_CANCELED, saveIntent);
+		} else
+		{
+			String name = mTaskNameEditText.getText().toString().trim();
+			saveIntent.putExtra(EXTRA_NAME, name);
+			saveIntent.putExtra(EXTRA_DATE, mDateTime);
+			saveIntent.putExtra("action", mAction);
+			saveIntent.putExtra("taskId", mId);
+			saveIntent.putExtra("priority", mPriority);
+			setResult(RESULT_OK, saveIntent);
+		}
+	}
+
+	private void deleteProduct()
+	{
+		Intent deleteIntent = new Intent();
+		mAction = "delete";
+		deleteIntent.putExtra("action", mAction);
+		deleteIntent.putExtra("taskId", mId);
+		setResult(RESULT_OK, deleteIntent);
+	}
+
 	/*
 		Menu methods
 	 */
@@ -189,29 +216,11 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 		switch (item.getItemId())
 		{
 			case R.id.editor_menu_save:
-				Intent saveIntent = new Intent();
-				if (mDateTime <= 0 || TextUtils.isEmpty
-						(mTaskNameEditText.getText()))
-				{
-					setResult(RESULT_CANCELED, saveIntent);
-				} else
-				{
-					String name = mTaskNameEditText.getText().toString().trim();
-					saveIntent.putExtra(EXTRA_NAME, name);
-					saveIntent.putExtra(EXTRA_DATE, mDateTime);
-					saveIntent.putExtra("action", mAction);
-					saveIntent.putExtra("taskId", mId);
-					saveIntent.putExtra("priority", mPriority);
-					setResult(RESULT_OK, saveIntent);
-				}
+				saveProduct();
 				finish();
 				return true;
 			case R.id.editor_menu_delete:
-				Intent deleteIntent = new Intent();
-				mAction = "delete";
-				deleteIntent.putExtra("action", mAction);
-				deleteIntent.putExtra("taskId", mId);
-				setResult(RESULT_OK, deleteIntent);
+				deleteProduct();
 				finish();
 				return true;
 			case android.R.id.home:

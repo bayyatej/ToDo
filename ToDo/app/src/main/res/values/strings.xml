@@ -12,6 +12,8 @@
     <string name="editor_menu_delete_task">Delete Task</string>
     <string name="editor_menu_advanced_task_options">Advanced Task Options</string>
     <string name="task_editor_select_time_due">Select Time Due</string>
+    <string name="channel_name">Get \'Er Done</string>
+    <string name="channel_description">Channel for task due notifications</string>
     <!--String Arrays-->
     <string-array name="editor_task_priority_array">
         <item>Low</item>
