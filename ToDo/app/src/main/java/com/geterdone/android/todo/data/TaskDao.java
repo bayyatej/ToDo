@@ -25,9 +25,12 @@ public interface TaskDao
 	@Query("DELETE FROM task_table")
 	void deleteAll();
 
+	@Query("SELECT * FROM task_table WHERE id = :id")
+	Task getTaskById(int id);
+
 	//todo update to get tasks created in a particular list
 //	@Query("SELECT * from task_table WHERE parentKey = :taskKey ORDER BY priority ASC")
-	@Query("SELECT * FROM task_table ORDER BY priority DESC")
+	@Query("SELECT * FROM task_table ORDER BY priority DESC, date ASC")
 	LiveData<List<Task>> getAllTasks();
 
 }

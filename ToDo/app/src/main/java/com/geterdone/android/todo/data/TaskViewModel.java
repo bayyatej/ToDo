@@ -38,6 +38,8 @@ public class TaskViewModel extends AndroidViewModel
 		mRepository.delete(task);
 	}
 
+	public Task getTaskById(int mId)
 	{
+		return mRepository.getTaskById(mId);
 	}
 }

@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class TaskRepository
 {
@@ -38,7 +39,21 @@ public class TaskRepository
 		new deleteAsyncTask(mTaskDao).execute(task);
 	}
 
+	public Task getTaskById(int mId)
 	{
+		AsyncTask<Integer, Void, Task> asyncTask = new getTaskByIdAsyncTask(mTaskDao).execute(mId);
+		Task task = null;
+		try
+		{
+			task = asyncTask.get();
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		} catch (ExecutionException e)
+		{
+			e.printStackTrace();
+		}
+		return task;
 	}
 
 	//helper classes
@@ -92,6 +107,36 @@ public class TaskRepository
 		{
 			mAsyncTaskDao.delete(tasks[0]);
 			return null;
+		}
+	}
+
+
+	private static class getTaskByIdAsyncTask extends AsyncTask<Integer, Void, Task>
+	{
+		private TaskDao mAsyncTaskDao;
+		private Task mTask;
+
+		private getTaskByIdAsyncTask(TaskDao dao)
+		{
+			mAsyncTaskDao = dao;
+		}
+
+
+		@Override
+		protected Task doInBackground(Integer... integers)
+		{
+			return mAsyncTaskDao.getTaskById(integers[0]);
+		}
+
+		@Override
+		protected void onPostExecute(Task task)
+		{
+			mTask = task;
+		}
+
+		private Task getTask()
+		{
+			return mTask;
 		}
 	}
 }

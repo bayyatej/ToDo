@@ -26,8 +26,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 		private final TextView taskNameTextView;
 		private final TextView taskDateTextView;
 		private int mPos;
-		private long mDateInMillis;
-		private int mPriority;
 
 		private TaskViewHolder(View itemView)
 		{
@@ -41,10 +39,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 				public void onClick(View v)
 				{
 					Intent intent = new Intent(mContext, TaskEditorActivity.class);
-					intent.putExtra("name", taskNameTextView.getText().toString().trim());
-					intent.putExtra("date", mDateInMillis);
 					intent.putExtra("action", "edit");
-					intent.putExtra("priority", mPriority);
 					intent.putExtra("taskId", mPos);
 					((Activity) mContext).startActivityForResult(intent, MainActivity.TASK_EDITOR_ACTIVITY_REQUEST_CODE);
 				}
@@ -54,16 +49,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 		private void setPos(int pos)
 		{
 			mPos = pos;
-		}
-
-		private void setDateInMillis(long date)
-		{
-			mDateInMillis = date;
-		}
-
-		private void setPriority(int priority)
-		{
-			mPriority = priority;
 		}
 	}
 
@@ -79,7 +64,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 
 	@NonNull
 	@Override
-	public TaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+	public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
 	{
 		View itemView = mInflater.inflate(R.layout.task_list_item, parent, false);
 		return new TaskViewHolder(itemView);
@@ -91,18 +76,15 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 		if (mTasks != null)
 		{
 			Task current = mTasks.get(position);
-			int priority = current.getPriority();
-			holder.setPriority(priority);
 			long dateTime = current.getTaskDate();
+			int priority = current.getPriority();
 			Date date = new Date(dateTime);
 			DateFormat dateTimeFormatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
 			dateTimeFormatter.setTimeZone(TimeZone.getDefault());
 			String formattedDateString = dateTimeFormatter.format(date);
-
 			holder.taskNameTextView.setText(current.getTaskName());
 			holder.taskDateTextView.setText(formattedDateString);
 			holder.setPos(current.getId());
-			holder.setDateInMillis(dateTime);
 
 			switch (priority)
 			{

@@ -2,6 +2,7 @@ package com.geterdone.android.todo;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -19,6 +20,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.geterdone.android.todo.data.Task;
+import com.geterdone.android.todo.data.TaskViewModel;
+
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,7 +30,7 @@ import java.util.TimeZone;
 
 public class TaskEditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener
 {
-	//todo set default date to be todays date if not selected
+	//todo set default date to be today's date if not selected
 	//todo validate input
 
 	public static final String EXTRA_NAME = "com.geterdone.android.tasklistsql.NAME";
@@ -36,10 +40,13 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 	private TextView mTaskDateTextView;
 	private TextView mTaskTimeTextView;
 
+	private TaskViewModel mTaskViewModel;
 	private Calendar mCal;
 	private String mTimeDisplayString;
 	private String mDateDisplayString;
 	private String mAction;
+	private boolean mDateSet;
+	private boolean mTimeSet;
 	private long mDateTime;
 	private int mPriority;
 	private int mId;
@@ -49,6 +56,7 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_task_editor);
+		mTaskViewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
 		setupWidgets();
 	}
 
@@ -68,8 +76,9 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 		mCal = Calendar.getInstance(TimeZone.getDefault());
 		mAction = intent.getStringExtra("action");
 		mId = intent.getIntExtra("taskId", -1);
-		mDateTime = intent.getLongExtra("date", 0);
-		mPriority = intent.getIntExtra("priority", 0);
+		Task task = mTaskViewModel.getTaskById(mId);
+		mDateTime = task.getTaskDate();
+		mPriority = task.getPriority();
 		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.editor_task_priority_array, android.R.layout.simple_spinner_item);
 
 		taskDateBtn.setOnClickListener(new View.OnClickListener()
@@ -123,10 +132,12 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 					timeFormatter.setTimeZone(TimeZone.getDefault());
 					mDateDisplayString = getDateString(dateFormatter);
 					mTimeDisplayString = getTimeString(timeFormatter);
+					mDateSet = true;
+					mTimeSet = true;
 					mPrioritySpinner.setSelection(mPriority, false);
 
 					actionBar.setTitle("Edit Task");
-					mTaskNameEditText.setText(intent.getStringExtra("name"));
+					mTaskNameEditText.setText(task.getTaskName());
 					mTaskDateTextView.setText(mDateDisplayString);
 					mTaskTimeTextView.setText(mTimeDisplayString);
 					mTaskDateTextView.setVisibility(View.VISIBLE);
@@ -215,6 +226,12 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 	@Override
 	public void onDateSet(DatePicker view, int year, int month, int dayOfMonth)
 	{
+		mDateSet = true;
+		if (!mTimeSet)
+		{
+			mCal.clear(Calendar.HOUR_OF_DAY);
+			mCal.clear(Calendar.MINUTE);
+		}
 		mCal.set(year, month, dayOfMonth);
 		mDateTime = mCal.getTimeInMillis();
 		mDateDisplayString = getDateString(null);
@@ -229,6 +246,13 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 	@Override
 	public void onTimeSet(TimePicker view, int hourOfDay, int minute)
 	{
+		mTimeSet = true;
+		if (!mDateSet)
+		{
+			mCal.clear(Calendar.YEAR);
+			mCal.clear(Calendar.MONTH);
+			mCal.clear(Calendar.DAY_OF_MONTH);
+		}
 		mCal.set(Calendar.HOUR_OF_DAY, hourOfDay);
 		mCal.set(Calendar.MINUTE, minute);
 		mDateTime = mCal.getTimeInMillis();
