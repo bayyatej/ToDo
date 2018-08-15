@@ -39,6 +39,7 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 	private EditText mTaskNameEditText;
 	private TextView mTaskDateTextView;
 	private TextView mTaskTimeTextView;
+	private Button mTaskTimeBtn;
 
 	private TaskViewModel mTaskViewModel;
 	private Calendar mCal;
@@ -70,15 +71,13 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 		mTaskNameEditText = findViewById(R.id.editor_task_name_edit_text);
 		mTaskDateTextView = findViewById(R.id.editor_task_date_text_view);
 		mTaskTimeTextView = findViewById(R.id.editor_task_time_text_view);
+		mTaskTimeBtn = findViewById(R.id.task_time_button);
 		Spinner mPrioritySpinner = findViewById(R.id.editor_task_priority_spinner);
 		Button taskDateBtn = findViewById(R.id.task_date_button);
-		Button taskTimeBtn = findViewById(R.id.task_time_button);
 		mCal = Calendar.getInstance(TimeZone.getDefault());
 		mAction = intent.getStringExtra("action");
 		mId = intent.getIntExtra("taskId", -1);
 		Task task = mTaskViewModel.getTaskById(mId);
-		mDateTime = task.getTaskDate();
-		mPriority = task.getPriority();
 		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.editor_task_priority_array, android.R.layout.simple_spinner_item);
 
 		taskDateBtn.setOnClickListener(new View.OnClickListener()
@@ -90,7 +89,7 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 				datePickerFragment.show(getSupportFragmentManager(), "datePicker");
 			}
 		});
-		taskTimeBtn.setOnClickListener(new View.OnClickListener()
+		mTaskTimeBtn.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
@@ -126,14 +125,16 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 					actionBar.setTitle("Add New Task");
 					break;
 				case "edit":
+					mDateTime = task.getTaskDate();
+					mPriority = task.getPriority();
+					mDateSet = true;
+					mTimeSet = true;
 					DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
 					dateFormatter.setTimeZone(TimeZone.getDefault());
 					DateFormat timeFormatter = DateFormat.getTimeInstance(DateFormat.SHORT);
 					timeFormatter.setTimeZone(TimeZone.getDefault());
 					mDateDisplayString = getDateString(dateFormatter);
 					mTimeDisplayString = getTimeString(timeFormatter);
-					mDateSet = true;
-					mTimeSet = true;
 					mPrioritySpinner.setSelection(mPriority, false);
 
 					actionBar.setTitle("Edit Task");
@@ -142,6 +143,7 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 					mTaskTimeTextView.setText(mTimeDisplayString);
 					mTaskDateTextView.setVisibility(View.VISIBLE);
 					mTaskTimeTextView.setVisibility(View.VISIBLE);
+					mTaskTimeBtn.setVisibility(View.VISIBLE);
 					break;
 				default:
 					break;
@@ -240,6 +242,10 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 		if (mTaskDateTextView.getVisibility() == View.GONE)
 		{
 			mTaskDateTextView.setVisibility(View.VISIBLE);
+		}
+		if (mTaskTimeBtn.getVisibility() == View.GONE)
+		{
+			mTaskTimeBtn.setVisibility(View.VISIBLE);
 		}
 	}
 
