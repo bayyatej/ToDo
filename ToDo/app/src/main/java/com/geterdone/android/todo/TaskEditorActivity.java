@@ -260,21 +260,23 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 	@Override
 	public void onTimeSet(TimePicker view, int hourOfDay, int minute)
 	{
-		//todo validate user input
+		Calendar cal = Calendar.getInstance();
+		Date currTime = cal.getTime();
 		mTimeSet = true;
-		if (!mDateSet)
-		{
-			mCal.clear(Calendar.YEAR);
-			mCal.clear(Calendar.MONTH);
-			mCal.clear(Calendar.DAY_OF_MONTH);
-		}
 		mCal.set(Calendar.HOUR_OF_DAY, hourOfDay);
 		mCal.set(Calendar.MINUTE, minute);
-		mDateTime = mCal.getTimeInMillis();
-		mTimeDisplayString = getTimeString(null);
-		mDateTimeDisplayString = mDateDisplayString + "\n" + mTimeDisplayString;
+		if (currTime.after(mCal.getTime()))
+		{
+			TimePickerFragment timePickerFragment = new TimePickerFragment();
+			timePickerFragment.show(getSupportFragmentManager(), "timePicker");
+		} else
+		{
+			mDateTime = mCal.getTimeInMillis();
+			mTimeDisplayString = getTimeString(null);
+			mDateTimeDisplayString = mDateDisplayString + "\n" + mTimeDisplayString;
 
-		mTaskDateTextView.setText(mDateTimeDisplayString);
+			mTaskDateTextView.setText(mDateTimeDisplayString);
+		}
 	}
 
 }
