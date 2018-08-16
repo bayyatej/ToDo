@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/activityBackgroundColor"
     android:orientation="vertical">
 
     <EditText
@@ -17,7 +16,8 @@
         android:inputType="textAutoComplete"
         android:padding="8dp"
         android:textSize="18sp"
-        tools:targetApi="jelly_bean" />
+        tools:targetApi="o"
+        android:importantForAutofill="no" />
 
     <TextView
         android:id="@+id/editor_task_date_text_view"
