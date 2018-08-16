@@ -3,11 +3,12 @@ package com.geterdone.android.todo;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 
 import java.util.Calendar;
 import java.util.TimeZone;
+
+import androidx.fragment.app.DialogFragment;
 
 public class TimePickerFragment extends DialogFragment
 {
