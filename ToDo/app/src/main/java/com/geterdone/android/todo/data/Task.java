@@ -14,10 +14,12 @@ public class Task
 	//todo parentKey support
 	@NonNull
 	@ColumnInfo(name = "priority")
-	private Integer mPriority = 0;
+	private Integer mPriority;
 	/*
 	@ColumnInfo(name = "parentKey")
 	private Integer parentKey;*/
+	@ColumnInfo(name = "work_id")
+	private String mUUID;
 	@NonNull
 	@ColumnInfo(name = "name")
 	private String mTaskName;
@@ -29,6 +31,7 @@ public class Task
 		this.mTaskName = taskName;
 		this.mTaskDate = taskDate;
 		this.mPriority = priority;
+		this.mUUID = null;
 	}
 
 	public int getId()
@@ -39,6 +42,11 @@ public class Task
 	public Integer getPriority()
 	{
 		return this.mPriority;
+	}
+
+	public String getUUID()
+	{
+		return this.mUUID;
 	}
 /*
 	public int getParentKey()
@@ -64,6 +72,21 @@ public class Task
 	public void setPriority(@NonNull Integer priority)
 	{
 		this.mPriority = priority;
+	}
+
+	public void setUUID(String workId)
+	{
+		this.mUUID = workId;
+	}
+
+	public void setTaskName(String name)
+	{
+		this.mTaskName = name;
+	}
+
+	public void setTaskDate(long date)
+	{
+		this.mTaskDate = date;
 	}
 
 	/*

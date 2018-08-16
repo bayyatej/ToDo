@@ -14,7 +14,10 @@ import com.geterdone.android.todo.data.TaskViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,11 +26,14 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 public class MainActivity extends AppCompatActivity
 {
 	public static final int TASK_EDITOR_ACTIVITY_REQUEST_CODE = 1;
-	private static final String CHANNEL_ID = "Get 'er done";
+	public static final String CHANNEL_ID = "Get 'er done";
 	private TaskViewModel mTaskViewModel;
 
 	@Override
@@ -78,29 +84,38 @@ public class MainActivity extends AppCompatActivity
 
 		if (requestCode == TASK_EDITOR_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK)
 		{
-			Task task = new Task(data.getStringExtra(TaskEditorActivity.EXTRA_NAME), data
-					.getLongExtra(TaskEditorActivity.EXTRA_DATE, 0), data.getIntExtra("priority", 0));
+			Task task;
+			String name = data.getStringExtra(TaskEditorActivity.EXTRA_NAME);
+			long date = data.getLongExtra(TaskEditorActivity.EXTRA_DATE, 0);
+			Integer priority = data.getIntExtra("priority", 0);
 			int id = data.getIntExtra("taskId", -1);
 			switch (data.getStringExtra("action"))
 			{
 				case "add":
+					task = new Task(name, date, priority);
 					mTaskViewModel.insert(task);
-					//todo set notification
+					enqueueNotification(task);
 					break;
 				case "edit":
 					if (id != -1)
 					{
-						task.setId(id);
+						task = mTaskViewModel.getTaskById(id);
+						task.setTaskName(name);
+						task.setTaskDate(date);
+						task.setPriority(priority);
 						mTaskViewModel.update(task);
-						//todo update notification
+						enqueueNotification(task);
 					}
 					break;
 				case "delete":
 					if (id != -1)
 					{
-						task.setId(id);
+						task = mTaskViewModel.getTaskById(id);
+						task.setTaskName(name);
+						task.setTaskDate(date);
+						task.setPriority(priority);
 						mTaskViewModel.delete(task);
-						//todo delete notification
+						dequeueNotification(task);
 					}
 					break;
 				default:
@@ -134,6 +149,36 @@ public class MainActivity extends AppCompatActivity
 				notificationManager.createNotificationChannel(channel);
 			}
 		}
+	}
+
+	private void enqueueNotification(Task task)
+	{
+		long date = task.getTaskDate();
+		if (date > 0)
+		{
+			WorkManager workManager = WorkManager.getInstance();
+			OneTimeWorkRequest.Builder requestBuilder = new OneTimeWorkRequest.Builder(TaskNotificationWorker.class);
+			requestBuilder.setInitialDelay(calculateDelay(date), TimeUnit.MILLISECONDS);
+			WorkRequest request = requestBuilder.build();
+			task.setUUID(request.getId().toString());
+			workManager.enqueue(request);
+		}
+	}
+
+	private void dequeueNotification(Task task)
+	{
+		String taskUUID = task.getUUID();
+		if (taskUUID != null)
+		{
+			WorkManager workManager = WorkManager.getInstance();
+			workManager.cancelWorkById(UUID.fromString(taskUUID));
+		}
+	}
+
+	private long calculateDelay(long date)
+	{
+		Date dateObj = new Date();
+		return date - dateObj.getTime();
 	}
 
 	/*

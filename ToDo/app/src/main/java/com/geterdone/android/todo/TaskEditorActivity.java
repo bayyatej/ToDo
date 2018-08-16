@@ -38,13 +38,13 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 
 	private EditText mTaskNameEditText;
 	private TextView mTaskDateTextView;
-	private TextView mTaskTimeTextView;
 	private Button mTaskTimeBtn;
 
 	private TaskViewModel mTaskViewModel;
 	private Calendar mCal;
 	private String mTimeDisplayString;
 	private String mDateDisplayString;
+	private String mDateTimeDisplayString;
 	private String mAction;
 	private boolean mDateSet;
 	private boolean mTimeSet;
@@ -70,7 +70,6 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 		Intent intent = getIntent();
 		mTaskNameEditText = findViewById(R.id.editor_task_name_edit_text);
 		mTaskDateTextView = findViewById(R.id.editor_task_date_text_view);
-		mTaskTimeTextView = findViewById(R.id.editor_task_time_text_view);
 		mTaskTimeBtn = findViewById(R.id.task_time_button);
 		Spinner mPrioritySpinner = findViewById(R.id.editor_task_priority_spinner);
 		Button taskDateBtn = findViewById(R.id.task_date_button);
@@ -135,14 +134,13 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 					timeFormatter.setTimeZone(TimeZone.getDefault());
 					mDateDisplayString = getDateString(dateFormatter);
 					mTimeDisplayString = getTimeString(timeFormatter);
+					mDateTimeDisplayString = mDateDisplayString + "\n" + mTimeDisplayString;
 					mPrioritySpinner.setSelection(mPriority, false);
 
 					actionBar.setTitle("Edit Task");
 					mTaskNameEditText.setText(task.getTaskName());
-					mTaskDateTextView.setText(mDateDisplayString);
-					mTaskTimeTextView.setText(mTimeDisplayString);
+					mTaskDateTextView.setText(mDateTimeDisplayString);
 					mTaskDateTextView.setVisibility(View.VISIBLE);
-					mTaskTimeTextView.setVisibility(View.VISIBLE);
 					mTaskTimeBtn.setVisibility(View.VISIBLE);
 					break;
 				default:
@@ -262,6 +260,7 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 	@Override
 	public void onTimeSet(TimePicker view, int hourOfDay, int minute)
 	{
+		//todo validate user input
 		mTimeSet = true;
 		if (!mDateSet)
 		{
@@ -273,12 +272,9 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 		mCal.set(Calendar.MINUTE, minute);
 		mDateTime = mCal.getTimeInMillis();
 		mTimeDisplayString = getTimeString(null);
+		mDateTimeDisplayString = mDateDisplayString + "\n" + mTimeDisplayString;
 
-		mTaskTimeTextView.setText(mTimeDisplayString);
-		if (mTaskTimeTextView.getVisibility() == View.GONE)
-		{
-			mTaskTimeTextView.setVisibility(View.VISIBLE);
-		}
+		mTaskDateTextView.setText(mDateTimeDisplayString);
 	}
 
 }
