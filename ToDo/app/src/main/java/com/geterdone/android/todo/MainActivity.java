@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity
 	 */
 	public static final int TASK_EDITOR_ACTIVITY_REQUEST_CODE = 1;
 	public static final String CHANNEL_ID = "Get 'er done";
-	private TaskViewModel mTaskViewModel;
+	public static TaskViewModel mTaskViewModel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)

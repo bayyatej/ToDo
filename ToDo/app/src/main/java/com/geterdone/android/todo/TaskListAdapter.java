@@ -29,7 +29,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 		private final ImageView mTaskDoneView;
 		private final TextView mTaskNameTextView;
 		private final TextView mTaskDateTextView;
-		private int mPos;
 
 		private TaskViewHolder(View itemView)
 		{
@@ -39,33 +38,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 			mTaskContainer = itemView.findViewById(R.id.task_container);
 			mTaskDetails = itemView.findViewById(R.id.task_details);
 			mTaskDoneView = itemView.findViewById(R.id.task_complete);
-
-			mTaskDetails.setOnClickListener(new View.OnClickListener()
-			{
-				@Override
-				public void onClick(View v)
-				{
-					Intent intent = new Intent(mContext, TaskEditorActivity.class);
-					intent.putExtra("action", "edit");
-					intent.putExtra("taskId", mPos);
-					((Activity) mContext).startActivityForResult(intent, MainActivity.TASK_EDITOR_ACTIVITY_REQUEST_CODE);
-				}
-			});
-			mTaskDoneView.setOnClickListener(new View.OnClickListener()
-			{
-				@Override
-				public void onClick(View view)
-				{
-					mTasks.remove(mPos - 1);
-					notifyItemRemoved(mPos - 1);
-					notifyItemRangeChanged(mPos - 1, mTasks.size());
-				}
-			});
-		}
-
-		private void setPos(int pos)
-		{
-			mPos = pos;
 		}
 	}
 
@@ -88,11 +60,11 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 	}
 
 	@Override
-	public void onBindViewHolder(@NonNull TaskViewHolder holder, int position)
+	public void onBindViewHolder(@NonNull TaskViewHolder holder, final int position)
 	{
 		if (mTasks != null)
 		{
-			Task current = mTasks.get(position);
+			final Task current = mTasks.get(position);
 			long dateTime = current.getTaskDate();
 			int priority = current.getPriority();
 			Date date = new Date(dateTime);
@@ -101,7 +73,29 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 			String formattedDateString = dateTimeFormatter.format(date);
 			holder.mTaskNameTextView.setText(current.getTaskName());
 			holder.mTaskDateTextView.setText(formattedDateString);
-			holder.setPos(current.getId());
+			final int id = current.getId();
+
+			holder.mTaskDetails.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					Intent intent = new Intent(mContext, TaskEditorActivity.class);
+					intent.putExtra("action", "edit");
+					intent.putExtra("taskId", id);
+					((Activity) mContext).startActivityForResult(intent, MainActivity.TASK_EDITOR_ACTIVITY_REQUEST_CODE);
+				}
+			});
+			holder.mTaskDoneView.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View view)
+				{
+					MainActivity.mTaskViewModel.delete(current);
+					mTasks.remove(position);
+					notifyItemRemoved(position);
+				}
+			});
 
 			switch (priority)
 			{
