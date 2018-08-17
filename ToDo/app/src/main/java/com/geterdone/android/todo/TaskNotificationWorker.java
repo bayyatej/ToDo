@@ -18,7 +18,7 @@ public class TaskNotificationWorker extends Worker
 		NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
 
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), MainActivity.CHANNEL_ID);
-		builder.setSmallIcon(R.drawable.ic_check_black_24dp);
+		builder.setSmallIcon(R.drawable.ic_check_white_24dp);
 		builder.setContentTitle("ToDo");
 		builder.setContentText("You have a task due!");
 		builder.setPriority(NotificationCompat.PRIORITY_HIGH);

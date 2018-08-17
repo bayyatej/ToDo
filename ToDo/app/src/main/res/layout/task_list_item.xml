@@ -1,28 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/task_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp">
+    android:orientation="horizontal"
+    android:padding="8dp"
+    tools:background="@color/colorPrimaryDark">
 
-    <TextView
-        android:id="@+id/task_name_text_view"
+
+    <ImageView
+        android:id="@+id/task_complete"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:contentDescription="@string/mark_item_as_done"
+        app:srcCompat="@drawable/ic_check_white_24dp" />
+
+    <LinearLayout
+        android:id="@+id/task_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#fff"
-        android:textSize="20sp"
-        tools:text="@tools:sample/cities" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/task_date_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginTop="8dp"
-        android:textColor="#fff"
-        android:textSize="16sp"
-        tools:text="@tools:sample/date/ddmmyy" />
+        <TextView
+            android:id="@+id/task_name_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="20sp"
+            tools:text="@tools:sample/cities" />
+
+        <TextView
+            android:id="@+id/task_date_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="8dp"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            tools:text="@tools:sample/date/ddmmyy" />
+    </LinearLayout>
 
 </LinearLayout>

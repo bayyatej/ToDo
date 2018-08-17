@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,18 +24,23 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 {
 	class TaskViewHolder extends RecyclerView.ViewHolder
 	{
-		private final LinearLayout taskContainerLinearLayout;
-		private final TextView taskNameTextView;
-		private final TextView taskDateTextView;
+		private final LinearLayout mTaskContainer;
+		private final LinearLayout mTaskDetails;
+		private final ImageView mTaskDoneView;
+		private final TextView mTaskNameTextView;
+		private final TextView mTaskDateTextView;
 		private int mPos;
 
 		private TaskViewHolder(View itemView)
 		{
 			super(itemView);
-			taskNameTextView = itemView.findViewById(R.id.task_name_text_view);
-			taskDateTextView = itemView.findViewById(R.id.task_date_text_view);
-			taskContainerLinearLayout = itemView.findViewById(R.id.task_container);
-			itemView.setOnClickListener(new View.OnClickListener()
+			mTaskNameTextView = itemView.findViewById(R.id.task_name_text_view);
+			mTaskDateTextView = itemView.findViewById(R.id.task_date_text_view);
+			mTaskContainer = itemView.findViewById(R.id.task_container);
+			mTaskDetails = itemView.findViewById(R.id.task_details);
+			mTaskDoneView = itemView.findViewById(R.id.task_complete);
+
+			mTaskDetails.setOnClickListener(new View.OnClickListener()
 			{
 				@Override
 				public void onClick(View v)
@@ -43,6 +49,16 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 					intent.putExtra("action", "edit");
 					intent.putExtra("taskId", mPos);
 					((Activity) mContext).startActivityForResult(intent, MainActivity.TASK_EDITOR_ACTIVITY_REQUEST_CODE);
+				}
+			});
+			mTaskDoneView.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View view)
+				{
+					mTasks.remove(mPos - 1);
+					notifyItemRemoved(mPos - 1);
+					notifyItemRangeChanged(mPos - 1, mTasks.size());
 				}
 			});
 		}
@@ -83,25 +99,25 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 			DateFormat dateTimeFormatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
 			dateTimeFormatter.setTimeZone(TimeZone.getDefault());
 			String formattedDateString = dateTimeFormatter.format(date);
-			holder.taskNameTextView.setText(current.getTaskName());
-			holder.taskDateTextView.setText(formattedDateString);
+			holder.mTaskNameTextView.setText(current.getTaskName());
+			holder.mTaskDateTextView.setText(formattedDateString);
 			holder.setPos(current.getId());
 
 			switch (priority)
 			{
 				case 0:
-					holder.taskContainerLinearLayout.setBackgroundColor(holder.taskContainerLinearLayout.getContext().getResources().getColor(R.color.lowPriority));
+					holder.mTaskContainer.setBackgroundColor(holder.mTaskContainer.getContext().getResources().getColor(R.color.lowPriority));
 					break;
 				case 1:
-					holder.taskContainerLinearLayout.setBackgroundColor(holder.taskContainerLinearLayout.getContext().getResources().getColor(R.color.mediumPriority));
+					holder.mTaskContainer.setBackgroundColor(holder.mTaskContainer.getContext().getResources().getColor(R.color.mediumPriority));
 					break;
 				case 2:
-					holder.taskContainerLinearLayout.setBackgroundColor(holder.taskContainerLinearLayout.getContext().getResources().getColor(R.color.highPriority));
+					holder.mTaskContainer.setBackgroundColor(holder.mTaskContainer.getContext().getResources().getColor(R.color.highPriority));
 					break;
 			}
 		} else
 		{
-			holder.taskDateTextView.setText(R.string.add_a_task_when_empty);
+			holder.mTaskDateTextView.setText(R.string.add_a_task_when_empty);
 		}
 	}
 

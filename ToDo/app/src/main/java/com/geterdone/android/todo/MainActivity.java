@@ -32,6 +32,10 @@ import androidx.work.WorkRequest;
 
 public class MainActivity extends AppCompatActivity
 {
+	/*
+		todo support swipe gestures
+		todo launch settings menu
+	 */
 	public static final int TASK_EDITOR_ACTIVITY_REQUEST_CODE = 1;
 	public static final String CHANNEL_ID = "Get 'er done";
 	private TaskViewModel mTaskViewModel;
@@ -197,7 +201,6 @@ public class MainActivity extends AppCompatActivity
 		switch (item.getItemId())
 		{
 			case R.id.settings_menu_item:
-				//todo launch settings menu activity
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

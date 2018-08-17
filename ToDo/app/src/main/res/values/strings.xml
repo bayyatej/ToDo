@@ -12,6 +12,7 @@
     <string name="task_editor_select_time_due">Select Time Due</string>
     <string name="channel_name">Get \'Er Done</string>
     <string name="channel_description">Channel for task due notifications</string>
+    <string name="mark_item_as_done">Mark Item As Done</string>
     <!--String Arrays-->
     <string-array name="editor_task_priority_array">
         <item>Low</item>
