@@ -115,7 +115,6 @@ public class TaskRepository
 	private static class getTaskByIdAsyncTask extends AsyncTask<Integer, Void, Task>
 	{
 		private TaskDao mAsyncTaskDao;
-		private Task mTask;
 
 		private getTaskByIdAsyncTask(TaskDao dao)
 		{
@@ -127,17 +126,6 @@ public class TaskRepository
 		protected Task doInBackground(Integer... integers)
 		{
 			return mAsyncTaskDao.getTaskById(integers[0]);
-		}
-
-		@Override
-		protected void onPostExecute(Task task)
-		{
-			mTask = task;
-		}
-
-		private Task getTask()
-		{
-			return mTask;
 		}
 	}
 }
