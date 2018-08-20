@@ -126,12 +126,13 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 					mPriority = task.getPriority();
 					mDateSet = true;
 					mTimeSet = true;
+					Date dateTime = new Date(mDateTime);
 					DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
 					dateFormatter.setTimeZone(TimeZone.getDefault());
 					DateFormat timeFormatter = DateFormat.getTimeInstance(DateFormat.SHORT);
 					timeFormatter.setTimeZone(TimeZone.getDefault());
-					mDateDisplayString = getDateString(dateFormatter);
-					mTimeDisplayString = getTimeString(timeFormatter);
+					mDateDisplayString = getDateString(dateFormatter, dateTime);
+					mTimeDisplayString = getTimeString(timeFormatter, dateTime);
 					mDateTimeDisplayString = mDateDisplayString + "\n" + mTimeDisplayString;
 					mPrioritySpinner.setSelection(mPriority, false);
 
@@ -147,9 +148,12 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 		}
 	}
 
-	private String getDateString(DateFormat formatter)
+	private String getDateString(DateFormat formatter, Date date)
 	{
-		Date date = mCal.getTime();
+		if (date == null)
+		{
+			date = mCal.getTime();
+		}
 		if (formatter == null)
 		{
 			formatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
@@ -158,9 +162,13 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 		return formatter.format(date);
 	}
 
-	private String getTimeString(DateFormat formatter)
+	private String getTimeString(DateFormat formatter, Date time)
 	{
-		Date time = mCal.getTime();
+		if (time == null)
+		{
+			time = mCal.getTime();
+		}
+
 		if (formatter == null)
 		{
 			formatter = DateFormat.getTimeInstance(DateFormat.SHORT);
@@ -242,7 +250,7 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 		}
 		mCal.set(year, month, dayOfMonth);
 		mDateTime = mCal.getTimeInMillis();
-		mDateDisplayString = getDateString(null);
+		mDateDisplayString = getDateString(null, null);
 
 		mTaskDateTextView.setText(mDateDisplayString);
 		if (mTaskDateTextView.getVisibility() == View.GONE)
@@ -270,7 +278,7 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 		} else
 		{
 			mDateTime = mCal.getTimeInMillis();
-			mTimeDisplayString = getTimeString(null);
+			mTimeDisplayString = getTimeString(null, null);
 			mDateTimeDisplayString = mDateDisplayString + "\n" + mTimeDisplayString;
 
 			mTaskDateTextView.setText(mDateTimeDisplayString);
