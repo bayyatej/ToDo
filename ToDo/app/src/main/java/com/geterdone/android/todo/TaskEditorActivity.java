@@ -275,6 +275,7 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 		} else
 		{
 			mDateTime = mCal.getTimeInMillis();
+			mDateTime = mDateTime - mDateTime % 60000; // rounds down to the nearest minute
 			mTimeDisplayString = getTimeString(null, null);
 			mDateTimeDisplayString = mDateDisplayString + "\n" + mTimeDisplayString;
 
