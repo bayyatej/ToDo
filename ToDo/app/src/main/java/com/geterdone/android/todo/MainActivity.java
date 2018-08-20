@@ -1,10 +1,15 @@
 package com.geterdone.android.todo;
 
+import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,26 +19,26 @@ import com.geterdone.android.todo.data.TaskViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.AlarmManagerCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 public class MainActivity extends AppCompatActivity
 {
 	/*
+		todo add support for lists
+		todo add support for preset list types
+		todo add repeating task support
+		todo support android app links
 		todo support swipe gestures
+		todo add data binding to app
 		todo launch settings menu
 	 */
 	public static final int TASK_EDITOR_ACTIVITY_REQUEST_CODE = 1;
@@ -98,7 +103,7 @@ public class MainActivity extends AppCompatActivity
 				case "add":
 					task = new Task(name, date, priority);
 					mTaskViewModel.insert(task);
-					enqueueNotification(task);
+					scheduleNotification(task);
 					break;
 				case "edit":
 					if (id != -1)
@@ -108,7 +113,7 @@ public class MainActivity extends AppCompatActivity
 						task.setTaskDate(date);
 						task.setPriority(priority);
 						mTaskViewModel.update(task);
-						enqueueNotification(task);
+						scheduleNotification(task);
 					}
 					break;
 				case "delete":
@@ -119,7 +124,7 @@ public class MainActivity extends AppCompatActivity
 						task.setTaskDate(date);
 						task.setPriority(priority);
 						mTaskViewModel.delete(task);
-						dequeueNotification(task);
+						cancelNotification(task);
 					}
 					break;
 				default:
@@ -155,34 +160,47 @@ public class MainActivity extends AppCompatActivity
 		}
 	}
 
-	private void enqueueNotification(Task task)
+	private void scheduleNotification(Task task)
 	{
 		long date = task.getTaskDate();
+		ComponentName receiver = new ComponentName(this, TaskNotificationPublisher.class);
+		PackageManager pm = this.getPackageManager();
+
+		pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+
 		if (date > 0)
 		{
-			WorkManager workManager = WorkManager.getInstance();
-			OneTimeWorkRequest.Builder requestBuilder = new OneTimeWorkRequest.Builder(TaskNotificationWorker.class);
-			requestBuilder.setInitialDelay(calculateDelay(date), TimeUnit.MILLISECONDS);
-			WorkRequest request = requestBuilder.build();
-			task.setUUID(request.getId().toString());
-			workManager.enqueue(request);
+			Intent intent = new Intent(this, TaskNotificationPublisher.class);
+			intent.putExtra("name", task.getTaskName());
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
+			AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+			if (alarmManager != null)
+			{
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+				{
+					alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, date, pendingIntent);
+				} else
+				{
+					AlarmManagerCompat.setExactAndAllowWhileIdle(alarmManager, AlarmManager.RTC_WAKEUP, date, pendingIntent);
+				}
+			} else
+			{
+				Log.i("schedule failed", "scheduleNotification: ");
+			}
 		}
 	}
 
-	private void dequeueNotification(Task task)
+	private void cancelNotification(Task task)
 	{
-		String taskUUID = task.getUUID();
-		if (taskUUID != null)
-		{
-			WorkManager workManager = WorkManager.getInstance();
-			workManager.cancelWorkById(UUID.fromString(taskUUID));
-		}
-	}
-
-	private long calculateDelay(long date)
-	{
-		Date dateObj = new Date();
-		return date - dateObj.getTime();
+		/*
+		 * todo implement notification cancellation
+		 * todo remove uuid from Task
+		 */
+		Intent intent = new Intent();
+		intent.putExtra("name", task.getTaskName());
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+		pendingIntent.cancel();
 	}
 
 	/*

@@ -44,7 +44,6 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 	private String mDateDisplayString;
 	private String mDateTimeDisplayString;
 	private String mAction;
-	private boolean mDateSet;
 	private boolean mTimeSet;
 	private long mDateTime;
 	private int mPriority;
@@ -124,7 +123,6 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 				case "edit":
 					mDateTime = task.getTaskDate();
 					mPriority = task.getPriority();
-					mDateSet = true;
 					mTimeSet = true;
 					Date dateTime = new Date(mDateTime);
 					DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
@@ -242,7 +240,6 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 	@Override
 	public void onDateSet(DatePicker view, int year, int month, int dayOfMonth)
 	{
-		mDateSet = true;
 		if (!mTimeSet)
 		{
 			mCal.clear(Calendar.HOUR_OF_DAY);
