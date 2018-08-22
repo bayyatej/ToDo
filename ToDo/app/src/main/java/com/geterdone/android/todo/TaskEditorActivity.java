@@ -11,9 +11,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -21,6 +23,7 @@ import com.geterdone.android.todo.data.Task;
 import com.geterdone.android.todo.data.TaskViewModel;
 
 import java.text.DateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -37,6 +40,8 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 	private EditText mTaskNameEditText;
 	private TextView mTaskDateTextView;
 	private Button mTaskTimeBtn;
+	private Switch mRepeatSwitch;
+	private Spinner mRepeatFrequencySpinner;
 
 	private TaskViewModel mTaskViewModel;
 	private Calendar mCal;
@@ -44,8 +49,11 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 	private String mDateDisplayString;
 	private String mDateTimeDisplayString;
 	private String mAction;
+	private String mFrequency;
 	private boolean mTimeSet;
+	private boolean mEndDateSet = false;
 	private long mDateTime;
+	private long mRepeatEndDateTime;
 	private int mPriority;
 	private int mId;
 
@@ -68,13 +76,15 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 		mTaskNameEditText = findViewById(R.id.editor_task_name_edit_text);
 		mTaskDateTextView = findViewById(R.id.editor_task_date_text_view);
 		mTaskTimeBtn = findViewById(R.id.task_time_button);
+		mRepeatSwitch = findViewById(R.id.task_repeat_switch);
+		mRepeatFrequencySpinner = findViewById(R.id.task_repeat_frequency_spinner);
 		Spinner mPrioritySpinner = findViewById(R.id.editor_task_priority_spinner);
 		Button taskDateBtn = findViewById(R.id.task_date_button);
 		mCal = Calendar.getInstance(TimeZone.getDefault());
 		mAction = intent.getStringExtra("action");
 		mId = intent.getIntExtra("taskId", -1);
 		Task task = mTaskViewModel.getTaskById(mId);
-		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.editor_task_priority_array, android.R.layout.simple_spinner_item);
+		ArrayAdapter<CharSequence> prioritySpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.editor_task_priority_array, android.R.layout.simple_spinner_item);
 
 		taskDateBtn.setOnClickListener(new View.OnClickListener()
 		{
@@ -94,8 +104,20 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 				timePickerFragment.show(getSupportFragmentManager(), "timePicker");
 			}
 		});
-		spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		mPrioritySpinner.setAdapter(spinnerAdapter);
+		mRepeatSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+		{
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+			{
+				if (isChecked)
+				{
+					setupFrequencySpinner();
+				}
+			}
+		});
+
+		prioritySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mPrioritySpinner.setAdapter(prioritySpinnerAdapter);
 		mPrioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
 		{
 			@Override
@@ -133,6 +155,13 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 					mTimeDisplayString = getTimeString(timeFormatter, dateTime);
 					mDateTimeDisplayString = mDateDisplayString + "\n" + mTimeDisplayString;
 					mPrioritySpinner.setSelection(mPriority, false);
+
+					if (!TextUtils.isEmpty(task.getRepeatFrequency()))
+					{
+						mRepeatSwitch.setChecked(true);
+						int priorityPos = Arrays.asList(getResources().getStringArray(R.array.editor_task_frequency_array)).indexOf(task.getRepeatFrequency());
+						mPrioritySpinner.setSelection(priorityPos);
+					}
 
 					actionBar.setTitle("Edit Task");
 					mTaskNameEditText.setText(task.getTaskName());
@@ -190,6 +219,8 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 			saveIntent.putExtra("action", mAction);
 			saveIntent.putExtra("taskId", mId);
 			saveIntent.putExtra("priority", mPriority);
+			saveIntent.putExtra("frequency", mFrequency);
+			saveIntent.putExtra("endDate", mRepeatEndDateTime);
 			setResult(RESULT_OK, saveIntent);
 		}
 	}
@@ -201,6 +232,55 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 		deleteIntent.putExtra("action", mAction);
 		deleteIntent.putExtra("taskId", mId);
 		setResult(RESULT_OK, deleteIntent);
+	}
+
+	private void setupFrequencySpinner()
+	{
+		mRepeatFrequencySpinner.setVisibility(View.VISIBLE);
+		ArrayAdapter<CharSequence> frequencySpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.editor_task_frequency_array, android.R.layout.simple_spinner_item);
+
+		frequencySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mRepeatFrequencySpinner.setAdapter(frequencySpinnerAdapter);
+		mRepeatFrequencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+		{
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+			{
+				/*
+					todo add repeating task reminder
+				 */
+				Calendar cal = Calendar.getInstance();
+				mFrequency = mRepeatFrequencySpinner.getSelectedItem().toString();
+				switch (mFrequency)
+				{
+					case "Daily":
+						cal.add(Calendar.DAY_OF_MONTH, 1);
+						break;
+					case "Weekly":
+						cal.add(Calendar.WEEK_OF_YEAR, 1);
+						break;
+					case "Monthly":
+						cal.add(Calendar.MONTH, 1);
+						break;
+					case "Annually":
+						cal.add(Calendar.YEAR, 1);
+						break;
+					case "Custom":
+						//todo implement custom
+						break;
+				}
+				mEndDateSet = true;
+				DatePickerFragment datePickerFragment = new DatePickerFragment();
+				datePickerFragment.setCalendar(cal);
+				datePickerFragment.show(getSupportFragmentManager(), "datePicker");
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent)
+			{
+
+			}
+		});
 	}
 
 	/*
@@ -246,7 +326,13 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 			mCal.clear(Calendar.MINUTE);
 		}
 		mCal.set(year, month, dayOfMonth);
-		mDateTime = mCal.getTimeInMillis();
+		if (mEndDateSet)
+		{
+			mRepeatEndDateTime = mCal.getTimeInMillis();
+		} else
+		{
+			mDateTime = mCal.getTimeInMillis();
+		}
 		mDateDisplayString = getDateString(null, null);
 
 		mTaskDateTextView.setText(mDateDisplayString);
@@ -281,6 +367,9 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 
 			mTaskDateTextView.setText(mDateTimeDisplayString);
 		}
+		if (mRepeatSwitch.getVisibility() == View.GONE)
+		{
+			mRepeatSwitch.setVisibility(View.VISIBLE);
+		}
 	}
-
 }

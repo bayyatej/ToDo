@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity
 	/*
 		todo add support for lists
 		todo add support for preset list types
-		todo add repeating task support
+		todo add repeating task support in MainActivity
 		todo support android app links
 		todo support swipe gestures
 		todo add data binding to app
@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity
 			Task task;
 			String name = data.getStringExtra(TaskEditorActivity.EXTRA_NAME);
 			long date = data.getLongExtra(TaskEditorActivity.EXTRA_DATE, 0);
+			long endDate = data.getLongExtra("endDate", 0);
 			Integer priority = data.getIntExtra("priority", 0);
 			String frequency = data.getStringExtra("frequency");
 			int id = data.getIntExtra("taskId", -1);
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity
 				case "add":
 					task = new Task(name, date, priority);
 					task.setRepeatFrequency(frequency);
+					task.setEndDate(endDate);
 					mTaskViewModel.insert(task);
 					scheduleNotification(task);
 					break;
@@ -115,6 +117,7 @@ public class MainActivity extends AppCompatActivity
 						task.setTaskDate(date);
 						task.setPriority(priority);
 						task.setRepeatFrequency(frequency);
+						task.setEndDate(endDate);
 						mTaskViewModel.update(task);
 						scheduleNotification(task);
 					}

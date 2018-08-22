@@ -23,6 +23,10 @@ public class Task
 	private String mTaskName;
 	@ColumnInfo(name = "date")
 	private long mTaskDate;
+	@ColumnInfo(name = "end_date")
+	private long mTaskEndDate;
+	@ColumnInfo(name = "repeat_frequency")
+	private String mRepeatFrequency;
 
 	public Task(@NonNull String taskName, @NonNull long taskDate, @NonNull Integer priority)
 	{
@@ -41,6 +45,10 @@ public class Task
 		return this.mPriority;
 	}
 
+	public String getRepeatFrequency()
+	{
+		return this.mRepeatFrequency;
+	}
 /*
 	public int getParentKey()
 	{
@@ -55,6 +63,11 @@ public class Task
 	public long getTaskDate()
 	{
 		return this.mTaskDate;
+	}
+
+	public long getTaskEndDate()
+	{
+		return this.mTaskEndDate;
 	}
 
 	public void setId(int id)
@@ -75,6 +88,16 @@ public class Task
 	public void setTaskDate(long date)
 	{
 		this.mTaskDate = date;
+	}
+
+	public void setRepeatFrequency(String frequency)
+	{
+		this.mRepeatFrequency = frequency;
+	}
+
+	public void setEndDate(long endDate)
+	{
+		this.mTaskEndDate = endDate;
 	}
 
 	/*

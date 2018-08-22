@@ -10,13 +10,24 @@
     <string name="editor_menu_delete_task">Delete Task</string>
     <string name="editor_menu_advanced_task_options">Advanced Task Options</string>
     <string name="task_editor_select_time_due">Select Time Due</string>
+    <string name="task_editor_repeat_task">Repeat Task</string>
+    <!--Main Activity Strings-->
     <string name="channel_name">Get \'Er Done</string>
     <string name="channel_description">Channel for task due notifications</string>
     <string name="mark_item_as_done">Mark Item As Done</string>
+    <string name="add_new_task">Add New Task</string>
+    <string name="add_new_list">Add New List</string>
     <!--String Arrays-->
     <string-array name="editor_task_priority_array">
         <item>Low</item>
         <item>Medium</item>
         <item>High</item>
+    </string-array>
+    <string-array name="editor_task_frequency_array">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Annually</item>
+        <item>Custom</item>
     </string-array>
 </resources>
