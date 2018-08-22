@@ -1,6 +1,7 @@
 package com.geterdone.android.todo;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -94,6 +95,10 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 					MainActivity.mTaskViewModel.delete(current);
 					mTasks.remove(position);
 					notifyItemRemoved(position);
+					Intent intent = new Intent(mContext, TaskNotificationPublisher.class);
+					intent.putExtra("name", current.getTaskName());
+					PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
+					pendingIntent.cancel();
 				}
 			});
 
