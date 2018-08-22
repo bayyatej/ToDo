@@ -97,11 +97,13 @@ public class MainActivity extends AppCompatActivity
 			String name = data.getStringExtra(TaskEditorActivity.EXTRA_NAME);
 			long date = data.getLongExtra(TaskEditorActivity.EXTRA_DATE, 0);
 			Integer priority = data.getIntExtra("priority", 0);
+			String frequency = data.getStringExtra("frequency");
 			int id = data.getIntExtra("taskId", -1);
 			switch (data.getStringExtra("action"))
 			{
 				case "add":
 					task = new Task(name, date, priority);
+					task.setRepeatFrequency(frequency);
 					mTaskViewModel.insert(task);
 					scheduleNotification(task);
 					break;
@@ -112,6 +114,7 @@ public class MainActivity extends AppCompatActivity
 						task.setTaskName(name);
 						task.setTaskDate(date);
 						task.setPriority(priority);
+						task.setRepeatFrequency(frequency);
 						mTaskViewModel.update(task);
 						scheduleNotification(task);
 					}
@@ -172,7 +175,7 @@ public class MainActivity extends AppCompatActivity
 		{
 			Intent intent = new Intent(this, TaskNotificationPublisher.class);
 			intent.putExtra("name", task.getTaskName());
-			PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), task.getId(), intent, 0);
 			AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
 			if (alarmManager != null)
@@ -193,13 +196,9 @@ public class MainActivity extends AppCompatActivity
 
 	private void cancelNotification(Task task)
 	{
-		/*
-		 * todo implement notification cancellation
-		 * todo remove uuid from Task
-		 */
-		Intent intent = new Intent();
+		Intent intent = new Intent(this, TaskNotificationPublisher.class);
 		intent.putExtra("name", task.getTaskName());
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, task.getId(), intent, 0);
 		pendingIntent.cancel();
 	}
 

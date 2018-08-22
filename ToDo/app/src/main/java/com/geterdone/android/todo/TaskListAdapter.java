@@ -97,7 +97,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 					notifyItemRemoved(position);
 					Intent intent = new Intent(mContext, TaskNotificationPublisher.class);
 					intent.putExtra("name", current.getTaskName());
-					PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
+					PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, current.getId(), intent, 0);
 					pendingIntent.cancel();
 				}
 			});
