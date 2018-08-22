@@ -95,7 +95,7 @@ public class Task
 		this.mRepeatFrequency = frequency;
 	}
 
-	public void setEndDate(long endDate)
+	public void setTaskEndDate(long endDate)
 	{
 		this.mTaskEndDate = endDate;
 	}

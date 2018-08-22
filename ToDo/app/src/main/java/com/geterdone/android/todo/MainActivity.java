@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity
 				case "add":
 					task = new Task(name, date, priority);
 					task.setRepeatFrequency(frequency);
-					task.setEndDate(endDate);
+					task.setTaskEndDate(endDate);
 					mTaskViewModel.insert(task);
 					scheduleNotification(task);
 					break;
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity
 						task.setTaskDate(date);
 						task.setPriority(priority);
 						task.setRepeatFrequency(frequency);
-						task.setEndDate(endDate);
+						task.setTaskEndDate(endDate);
 						mTaskViewModel.update(task);
 						scheduleNotification(task);
 					}

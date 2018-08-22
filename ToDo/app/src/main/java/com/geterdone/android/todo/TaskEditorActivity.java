@@ -39,7 +39,6 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 
 	private EditText mTaskNameEditText;
 	private TextView mTaskDateTextView;
-	private Button mTaskTimeBtn;
 	private Switch mRepeatSwitch;
 	private Spinner mRepeatFrequencySpinner;
 
@@ -75,33 +74,23 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 		Intent intent = getIntent();
 		mTaskNameEditText = findViewById(R.id.editor_task_name_edit_text);
 		mTaskDateTextView = findViewById(R.id.editor_task_date_text_view);
-		mTaskTimeBtn = findViewById(R.id.task_time_button);
 		mRepeatSwitch = findViewById(R.id.task_repeat_switch);
 		mRepeatFrequencySpinner = findViewById(R.id.task_repeat_frequency_spinner);
 		Spinner mPrioritySpinner = findViewById(R.id.editor_task_priority_spinner);
-		Button taskDateBtn = findViewById(R.id.task_date_button);
+		Button taskNotificationBtn = findViewById(R.id.task_notification_button);
 		mCal = Calendar.getInstance(TimeZone.getDefault());
 		mAction = intent.getStringExtra("action");
 		mId = intent.getIntExtra("taskId", -1);
 		Task task = mTaskViewModel.getTaskById(mId);
 		ArrayAdapter<CharSequence> prioritySpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.editor_task_priority_array, android.R.layout.simple_spinner_item);
 
-		taskDateBtn.setOnClickListener(new View.OnClickListener()
+		taskNotificationBtn.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
 				DatePickerFragment datePickerFragment = new DatePickerFragment();
 				datePickerFragment.show(getSupportFragmentManager(), "datePicker");
-			}
-		});
-		mTaskTimeBtn.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				TimePickerFragment timePickerFragment = new TimePickerFragment();
-				timePickerFragment.show(getSupportFragmentManager(), "timePicker");
 			}
 		});
 		mRepeatSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
@@ -167,7 +156,6 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 					mTaskNameEditText.setText(task.getTaskName());
 					mTaskDateTextView.setText(mDateTimeDisplayString);
 					mTaskDateTextView.setVisibility(View.VISIBLE);
-					mTaskTimeBtn.setVisibility(View.VISIBLE);
 					break;
 				default:
 					break;
@@ -340,10 +328,8 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 		{
 			mTaskDateTextView.setVisibility(View.VISIBLE);
 		}
-		if (mTaskTimeBtn.getVisibility() == View.GONE)
-		{
-			mTaskTimeBtn.setVisibility(View.VISIBLE);
-		}
+		TimePickerFragment timePickerFragment = new TimePickerFragment();
+		timePickerFragment.show(getSupportFragmentManager(), "timePicker");
 	}
 
 	@Override

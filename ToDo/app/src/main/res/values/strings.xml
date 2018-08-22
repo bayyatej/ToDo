@@ -5,11 +5,10 @@
 
     <!--Editor Strings-->
     <string name="task_editor_hint_task_name">Task Name</string>
-    <string name="task_editor_select_due_date">Select Due Date</string>
+    <string name="task_editor_select_due_date">Set a Notification</string>
     <string name="editor_menu_save_task">Save Task</string>
     <string name="editor_menu_delete_task">Delete Task</string>
     <string name="editor_menu_advanced_task_options">Advanced Task Options</string>
-    <string name="task_editor_select_time_due">Select Time Due</string>
     <string name="task_editor_repeat_task">Repeat Task</string>
     <!--Main Activity Strings-->
     <string name="channel_name">Get \'Er Done</string>
