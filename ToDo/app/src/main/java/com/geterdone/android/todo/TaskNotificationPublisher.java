@@ -22,10 +22,12 @@ public class TaskNotificationPublisher extends BroadcastReceiver
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(context, MainActivity.CHANNEL_ID);
 		builder.setSmallIcon(R.drawable.ic_check_white_24dp);
 		builder.setContentTitle("ToDo");
-		builder.setContentText(intent.getStringExtra("name") + "is due.");
+		builder.setContentText("Reminder: " + intent.getStringExtra("name") + " is due!");
 		builder.setPriority(NotificationCompat.PRIORITY_HIGH);
 		builder.setContentIntent(pendingIntent);
 		builder.setAutoCancel(true);
 		notificationManagerCompat.notify(0, builder.build());
 	}
+
+
 }
