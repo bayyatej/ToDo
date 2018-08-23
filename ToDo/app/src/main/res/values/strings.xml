@@ -23,6 +23,7 @@
         <item>High</item>
     </string-array>
     <string-array name="editor_task_frequency_array">
+        <item>None</item>
         <item>Daily</item>
         <item>Weekly</item>
         <item>Monthly</item>

@@ -51,6 +51,7 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 	private String mFrequency;
 	private boolean mTimeSet;
 	private boolean mEndDateSet = false;
+	private boolean mFrequencySpinnerInitialized = false;
 	private long mDateTime;
 	private long mRepeatEndDateTime;
 	private int mPriority;
@@ -101,6 +102,11 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 				if (isChecked)
 				{
 					setupFrequencySpinner();
+				} else
+				{
+					mFrequency = "";
+					mRepeatEndDateTime = 0;
+					mFrequencySpinnerInitialized = false;
 				}
 			}
 		});
@@ -241,6 +247,8 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 				mFrequency = mRepeatFrequencySpinner.getSelectedItem().toString();
 				switch (mFrequency)
 				{
+					case "None":
+						break;
 					case "Daily":
 						cal.add(Calendar.DAY_OF_MONTH, 1);
 						break;
@@ -257,16 +265,21 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 						//todo implement custom
 						break;
 				}
-				mEndDateSet = true;
-				DatePickerFragment datePickerFragment = new DatePickerFragment();
-				datePickerFragment.setCalendar(cal);
-				datePickerFragment.show(getSupportFragmentManager(), "datePicker");
+				if (mFrequencySpinnerInitialized && !mFrequency.equals("None"))
+				{
+					mEndDateSet = true;
+					DatePickerFragment datePickerFragment = new DatePickerFragment();
+					datePickerFragment.setCalendar(cal);
+					datePickerFragment.show(getSupportFragmentManager(), "datePicker");
+				}
+				mFrequencySpinnerInitialized = true;
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parent)
 			{
-
+				mFrequency = "";
+				mRepeatEndDateTime = 0;
 			}
 		});
 	}
@@ -320,16 +333,15 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 		} else
 		{
 			mDateTime = mCal.getTimeInMillis();
+			mDateDisplayString = getDateString(null, null);
+			mTaskDateTextView.setText(mDateDisplayString);
+			if (mTaskDateTextView.getVisibility() == View.GONE)
+			{
+				mTaskDateTextView.setVisibility(View.VISIBLE);
+			}
+			TimePickerFragment timePickerFragment = new TimePickerFragment();
+			timePickerFragment.show(getSupportFragmentManager(), "timePicker");
 		}
-		mDateDisplayString = getDateString(null, null);
-
-		mTaskDateTextView.setText(mDateDisplayString);
-		if (mTaskDateTextView.getVisibility() == View.GONE)
-		{
-			mTaskDateTextView.setVisibility(View.VISIBLE);
-		}
-		TimePickerFragment timePickerFragment = new TimePickerFragment();
-		timePickerFragment.show(getSupportFragmentManager(), "timePicker");
 	}
 
 	@Override
