@@ -21,7 +21,7 @@ import android.widget.TimePicker;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.geterdone.android.todo.data.Task;
 import com.geterdone.android.todo.data.TaskViewModel;
@@ -33,6 +33,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class TaskEditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+    //todo fix task not saving without due date
     public static final String EXTRA_NAME = "com.geterdone.android.tasklistsql.NAME";
     public static final String EXTRA_DATE = "com.geterdone.android.tasklistsql.DATE";
 
@@ -60,7 +61,7 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_editor);
-        mTaskViewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
+        mTaskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
         setupWidgets();
     }
 
@@ -177,7 +178,7 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
         return formatter.format(time);
     }
 
-    private void saveProduct() {
+    private void saveTask() {
         Intent saveIntent = new Intent();
         if (mDateTime <= 0 || TextUtils.isEmpty
                 (mTaskNameEditText.getText())) {
@@ -195,7 +196,7 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
         }
     }
 
-    private void deleteProduct() {
+    private void deleteTask() {
         Intent deleteIntent = new Intent();
         mAction = "delete";
         deleteIntent.putExtra("action", mAction);
@@ -266,11 +267,11 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.editor_menu_save:
-                saveProduct();
+                saveTask();
                 finish();
                 return true;
             case R.id.editor_menu_delete:
-                deleteProduct();
+                deleteTask();
                 finish();
                 return true;
             case android.R.id.home:
