@@ -140,8 +140,8 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
 
                     if (!TextUtils.isEmpty(task.getRepeatFrequency())) {
                         mRepeatSwitch.setChecked(true);
-                        int priorityPos = Arrays.asList(getResources().getStringArray(R.array.editor_task_frequency_array)).indexOf(task.getRepeatFrequency());
-                        mPrioritySpinner.setSelection(priorityPos);
+                        int repeatFreqPos = Arrays.asList(getResources().getStringArray(R.array.editor_task_frequency_array)).indexOf(task.getRepeatFrequency());
+                        mRepeatFrequencySpinner.setSelection(repeatFreqPos, false);
                     }
 
                     actionBar.setTitle("Edit Task");
