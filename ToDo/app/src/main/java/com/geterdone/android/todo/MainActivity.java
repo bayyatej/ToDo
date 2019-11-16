@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
     /*
         todo add support for lists
         todo add support for preset list types
-        todo add repeating task support in MainActivity
         todo support android app links
         todo support swipe gestures
         todo add data binding to app
@@ -161,10 +160,31 @@ public class MainActivity extends AppCompatActivity {
         if (date > 0) {
             Intent intent = new Intent(this, TaskNotificationPublisher.class);
             intent.putExtra("name", task.getTaskName());
+            intent.putExtra("endDate", task.getTaskEndDate());
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), task.getId(), intent, 0);
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
             if (alarmManager != null) {
+                if (!task.getRepeatFrequency().equals("")) {
+                    String repeatFrequency = task.getRepeatFrequency();
+                    long repeatInterval = 0;
+
+                    switch (repeatFrequency) {
+                        case "Daily":
+                            repeatInterval = AlarmManager.INTERVAL_DAY;
+                            break;
+                        case "Weekly":
+                            repeatInterval = AlarmManager.INTERVAL_DAY * 7;
+                            break;
+                        case "Monthly":
+                            repeatInterval = AlarmManager.INTERVAL_DAY * 30;
+                            break;
+                        case "Anually":
+                            repeatInterval = AlarmManager.INTERVAL_DAY * 365;
+                            break;
+                    }
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, date, repeatInterval, pendingIntent);
+                }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, date, pendingIntent);
                 } else {

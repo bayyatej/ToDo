@@ -213,9 +213,6 @@ public class TaskEditorActivity extends AppCompatActivity implements DatePickerD
         mRepeatFrequencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				/*
-					todo add repeating task reminder
-				 */
                 Calendar cal = Calendar.getInstance();
                 mFrequency = mRepeatFrequencySpinner.getSelectedItem().toString();
                 switch (mFrequency) {
