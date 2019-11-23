@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class TaskRepository {
+class TaskRepository {
     private TaskDao mTaskDao;
     private LiveData<List<Task>> mAllTasks;
 
@@ -22,19 +22,19 @@ public class TaskRepository {
         return mAllTasks;
     }
 
-    public void insert(Task task) {
+    void insert(Task task) {
         new insertAsyncTask(mTaskDao).execute(task);
     }
 
-    public void update(Task task) {
+    void update(Task task) {
         new updateAsyncTask(mTaskDao).execute(task);
     }
 
-    public void delete(Task task) {
+    void delete(Task task) {
         new deleteAsyncTask(mTaskDao).execute(task);
     }
 
-    public Task getTaskById(int mId) {
+    Task getTaskById(int mId) {
         AsyncTask<Integer, Void, Task> asyncTask = new getTaskByIdAsyncTask(mTaskDao).execute(mId);
         Task task = null;
         try {
